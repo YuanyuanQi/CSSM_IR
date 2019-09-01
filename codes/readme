@@ -4,14 +4,10 @@ Finding Salient Context based on SemanticMatching for Relevance Ranking
 1. Requirements
 Python 2.7
 2. Data
-  #1. Pre-trained
-  #2. 5 Different sizes, contents, and topics of TREC collections:AP8889,Robust04,WT2G,Wt10G,Blog06.
+  #1. Pre-trained word vector: glove.6B.50d.g.txt, please download it from website:https://nlp.stanford.edu/projects/glove/
+  #2. As stated in the original paper, 5 Different sizes, contents, and topics of TREC collections:AP8889,Robust04,WT2G,Wt10G,Blog06.
     please download them from official website: https://trec.nist.gov/index.html
 
-3. Preprocess data.
-  Only 
-
-
-
 4. Coding Instructions
-
+ cd code
+ python main.py
