@@ -16,7 +16,7 @@ def query_tv(query_np):##2 通过自身向量的计算
 	return query_np
 
 
-def term2vector(terms):
+def term2vector(w2v,terms):
 	vectors =[]
 	for term in terms:
 		try:
@@ -45,13 +45,12 @@ def _term2vector(query,doc):
 	return np.array(query_vectors),np.array(doc_vectors)
 	
 
-def lc_bm25(qid_docno_score_dict, prediction_data_bm25, idx, bm25weighting, topk=1000):
+def lc_bm25(qid_docno_score_dict, prediction_data_bm25, bm25weighting, topk=1000):
 	res_dict = {'questions': []}
 	for qid ,value in qid_docno_score_dict.items():
 		docnos = value['docno']
-		scores = value['y_pred']
-		scores = np.array(scores[0])
-		scores = scores[:,0,idx]
+		scores = value['y_pred']#shape(1,1000,1)
+		scores = np.array(scores)[0,:,0]
 		bm25_scores = prediction_data_bm25[qid]['bm25']
 		scores = (bm25weighting*np.array(bm25_scores)+scores).tolist()
 		retr_scores = list(zip(docnos, scores))

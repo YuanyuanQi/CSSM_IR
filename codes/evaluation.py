@@ -54,6 +54,7 @@ def trec(golden_data, predictions_data, evalfile_name):
 
 		format_bioasq2treceval_qrels(golden_data, qrels_temp_file)
 		format_bioasq2treceval_qret(predictions_data, qret_temp_file)# qret_temp_file = '../Robust04.BM25b0.35_1.res'
+		print evalfile_name
 		trec_evaluate(qrels_temp_file, qret_temp_file, evalfile_name)
 
 	finally:

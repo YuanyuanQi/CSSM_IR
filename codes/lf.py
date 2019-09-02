@@ -5,6 +5,9 @@ import pickle
 import data_processing
 import os
 import data_loader
+import math 
+
+
 
 def rolling_max(A, window, num_max):
 	'''Computes roling maximum of 2D array.
@@ -17,16 +20,15 @@ def rolling_max(A, window, num_max):
 	b = np.lib.stride_tricks.as_strided(A, shape=shape, strides=strides)
 	return np.sort(b, axis=2)[:,:,::-1][:,:,:num_max]
 
-def score(query_path, qid, doc_path, docno, wind, alpha):
+def score(w2v,query_path, qid, doc_path, docno, wind, alpha):
 	Stopwords = data_loader.load_sw()
-	# print query_path
 	qry_list = pickle.load(open(os.path.join(query_path, qid)))
 	qry_list = list(set(qry_list)-set(Stopwords))
-	query_np = data_processing.term2vector(qry_list)
+	query_np = data_processing.term2vector(w2v,qry_list)
 
 	sents = pickle.load(open(os.path.join(doc_path, docno)))
 	words = sum(sents, [])
-	doc_np = data_processing.term2vector(words)
+	doc_np = data_processing.term2vector(w2v,words)
 
 	Doc_Score =[]
 	try:
@@ -37,12 +39,12 @@ def score(query_path, qid, doc_path, docno, wind, alpha):
 			length = doc_np.shape[0]
 		else:
 			length = wind
+
 		Top_K = int(math.log(length))+1
-		Con_Maxs = rolling_max(temp, length, Top_K)#[query_len*(doc_len-45+1)*2] 
+		Con_Maxs = rolling_max(qd_cos, length, Top_K)#[query_len*(doc_len-45+1)*2] 
 		Con_Score = np.sum(Con_Maxs, axis=0)#[(doc_len-45+1)*2]
 		score_al = np.max(Con_Score[:,0] + alpha*np.mean(Con_Score,axis=1))
-		Doc_Score.append([score_al.tolist()])
+		Doc_Score.append(score_al)
 	except:
-		# Doc_Score.append([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
-		Doc_Score.append([[0.0]])
+		Doc_Score.append(0.0)
 	return Doc_Score
